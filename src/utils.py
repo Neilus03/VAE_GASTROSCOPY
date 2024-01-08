@@ -27,6 +27,21 @@ def log_images(original, label, reconstructed):
     plt.close() # Prevent plots from accumulating in memory
 
 
+def save_image(genereated_image, label, folder_path, idx):
+    '''
+    Description:
+        Saves the generated image to the specified folder
+    Args:
+        genereated_image: Generated image
+        label: Label of the generated image
+        folder_path: Path to the folder where the image will be saved
+    Returns:
+        None. Image are saved to the specified folder
+    '''
+    image = genereated_image.permute(1, 2, 0).cpu().detach().numpy()
+    plt.imsave(f'{folder_path}/image_{idx}.png', image)
+        
+    
 
 def loss_function(recon_x, x, mu, logvar):
     '''

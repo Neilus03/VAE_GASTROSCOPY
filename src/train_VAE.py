@@ -2,7 +2,7 @@
 File to train the VAE model on the EGD dataset (only train data)
 '''
 import torch
-from utils import log_images, loss_function
+from utils import log_images, loss_function, save_image
 import config
 import wandb
 
@@ -38,6 +38,7 @@ for epoch in range(config.NUM_EPOCHS):
             
             label = label[0] # Get the label for the first image in the batch which is what we will visualize
             log_images(data[0], label.item(), recon_batch[0])
+            save_image(recon_batch[0], label.item(), config.SAVED_IMAGES_PATH_0, epoch)
             # Log the loss
             wandb.log({"loss": loss.item()/len(data)})
             
@@ -46,4 +47,4 @@ for epoch in range(config.NUM_EPOCHS):
     wandb.log({"average_loss": train_loss / len(config.DATALOADER.dataset)})
     # Save the model every 2 epochs
     if epoch % 100 == 0:
-        torch.save(config.MODEL.state_dict(), f'{config.MODELS_PATH}/vae_egd_epoch_{epoch}.pth')
+        torch.save(config.MODEL.state_dict(), f'{config.MODELS_PATH}/vae_egd_{config.TARGET_CLASS}epoch_{epoch}.pth')

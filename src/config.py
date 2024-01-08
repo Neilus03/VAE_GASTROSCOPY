@@ -13,6 +13,7 @@ from torch.utils.data import DataLoader
 from Conv_VAE_attention_model import ConvVAE
 from dataloader import EGDDataset
 import wandb
+import os
 
 '''
 Constants and other variables
@@ -29,15 +30,18 @@ ENTITY = 'neildlf'
 
 # Saved images path for class 0
 SAVED_IMAGES_PATH_0 = './saved_images_0'
+os.makedirs(SAVED_IMAGES_PATH_0, exist_ok=True)
 
 # Saved images path for class 1
 SAVED_IMAGES_PATH_1 = './saved_images_1'
+os.makedirs(SAVED_IMAGES_PATH_1, exist_ok=True)
 
 # Saved images path for class 2
 SAVED_IMAGES_PATH_2 = './saved_images_2'
+os.makedirs(SAVED_IMAGES_PATH_2, exist_ok=True)
 
 #Generate images of class:
-TARGET_CLASS = 2
+TARGET_CLASS = 0
 
 '''
 Hyperparameters
@@ -47,6 +51,15 @@ LATENT_SPACE_DIM = 256
 
 # Model we will use for training
 MODEL = ConvVAE(LATENT_SPACE_DIM)
+
+PRETRAINED = True
+
+if PRETRAINED:
+    #Load the pretrained model if it exists
+    print('Loading pretrained model')
+    MODEL.load_state_dict(torch.load(f'./models/vae_egd_{TARGET_CLASS}epoch_300.pth')) if os.path.exists(f'./models/vae_egd_{TARGET_CLASS}epoch_300.pth') else print('No pretrained model found so training from scratch')
+
+    
 
 # Number of epochs to train the model
 NUM_EPOCHS = 1000
